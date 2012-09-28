@@ -16,6 +16,13 @@ Or install it yourself as:
 
     $ gem install one_brasil
 
+## Configuration
+
+    OneBrasil.configure do |config|
+      config.username = "username"
+      config.password = "password"
+    end
+
 ## Usage
 
 TODO: Write usage instructions here
