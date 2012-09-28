@@ -18,4 +18,12 @@ describe OneBrasil::Configuration do
       expect(config.password).to be_equal(password)
     end
   end
+
+  describe "#api_url=" do
+    it "sets the api_url" do
+      api_url = "one_brasil"
+      config.api_url = api_url
+      expect(config.api_url).to be_equal(api_url)
+    end
+  end
 end

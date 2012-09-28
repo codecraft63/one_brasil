@@ -5,5 +5,9 @@ module OneBrasil
 
     # Password to the username authentication.
     attr_accessor :password
+
+    # API URL
+    attr_accessor :api_url
+    @api_url = "http://sms.onebrasilmidia.com.br/"
   end
 end
