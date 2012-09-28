@@ -18,10 +18,12 @@ Or install it yourself as:
 
 ## Configuration
 
-    OneBrasil.configure do |config|
-      config.username = "username"
-      config.password = "password"
-    end
+```ruby
+OneBrasil.configure do |config|
+  config.username = "username"
+  config.password = "password"
+end
+```
 
 ## Usage
 
