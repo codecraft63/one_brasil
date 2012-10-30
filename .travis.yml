@@ -1,0 +1,7 @@
+notifications:
+  recipients:
+    - ci@codecraft63.com
+language: ruby
+rvm: 
+  - 1.9.3
+  - jruby-19mode
