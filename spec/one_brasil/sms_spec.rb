@@ -1,52 +1,51 @@
 require 'spec_helper'
 
-describe OneBrasil::SMS do
-  let(:config) { mock("configuration").as_null_object }
-  let (:sms) { OneBrasil::SMS.new }
+module OneBrasil
+  describe SMS do
+    let(:config) { mock("configuration").as_null_object }
 
-  describe "initialize" do
-    before do
-      config.stub(:username).and_return("username")
-      config.stub(:password).and_return("password")
-      config.stub(:api_url).and_return("api_url")
-      OneBrasil.stub(:configuration).and_return(config)
+    describe "initialize" do
+      before do
+        config.stub(:username).and_return("username")
+        config.stub(:password).and_return("password")
+        config.stub(:api_url).and_return("api_url")
+        OneBrasil.stub(:configuration).and_return(config)
+      end
+
+      it 'set base_url, username and password variables' do
+        config.should_receive(:api_url)
+        config.should_receive(:username)
+        config.should_receive(:password)
+        described_class.new
+      end
     end
 
-    it 'set base_url, username and password variables' do
-      config.should_receive(:api_url)
-      config.should_receive(:username)
-      config.should_receive(:password)
-      OneBrasil::SMS.new
-    end
-  end
+    describe "#send" do
+      before do
+        OneBrasil.stub(:configuration).and_return(config)
 
-  describe "#send" do
-    before { OneBrasil.stub(:configuration).and_return(config) }
+        @message = mock('message')
+        @message.stub(:phone_number).and_return("123")
+        @message.stub(:body).and_return("text")
+        @message.stub(:valid?).and_return(true)
+      end
 
-    context "with valid data" do
-    end
-  end
+      it "with valid number and text" do
+        subject.stub(:execute).and_return(200)
+        expect(subject.send(@message)).to be_true
+      end
 
-  describe "#check_number" do 
-    it "must be a integer" do
-      expect(sms.check_number(7112345678)).to be_true
-      expect(sms.check_number("onebrasil")).to raise_error(ArgumentError, "Must be integer")
-    end
+      it "throw error with invalid credentials" do
+        subject.stub(:execute).and_return(403)
+        expect { subject.send(@message) }.to raise_error(AuthException)
+      end
 
-    it "must starts with a valid DDD" do
-      expect(sms.check_number(7112345678)).to be_true
-      expect(sms.check_number(1012345678)).to raise_error(OneBrasil::PhoneNumberError, "Unknown DDD code")
-    end
+      it "throw error with bad request" do
+        subject.stub(:execute).and_return(400)
+        expect { subject.send(@message) }.to raise_error(BadRequestException)
+      end
+ 
 
-    it "must have 10 characters" do
-      expect(sms.check_number(7112345678)).to be_true
-      expect(sms.check_number(711234567)).not_to be_true
-    end
-
-    context "DDD 11"
-    it "must have 11 characters" do
-      expect(sms.check_number(11123456789)).to be_true
-      expect(sms.check_number(1112345678)).not_to be_true
     end
   end
 end
